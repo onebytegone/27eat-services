@@ -23,6 +23,7 @@
       "@silvermine/chai-strictly-equal": "1.1.0",
       "@silvermine/eslint-config": "2.0.0",
       "@silvermine/typescript-config": "0.9.0",
+      "@types/aws-lambda": "8.10.20",
       "@types/chai": "4.1.7",
       "@types/mocha": "5.2.5",
       "@types/node": "8.10.36",
@@ -37,11 +38,18 @@
       "grunt-exec": "3.0.0",
       "mocha": "5.2.0",
       "nyc": "13.3.0",
+      "serverless-iam-roles-per-function": "1.0.4",
+      "serverless-webpack": "5.2.0",
+      "silvermine-serverless-utils": "git+https://github.com/silvermine/serverless-utils.git#910f1149af824fc8d0fa840878079c7d3df0f414",
       "sinon": "5.1.1",
-      "source-map-support": "0.5.9",
+      "ts-loader": "5.3.3",
       "ts-node": "7.0.1",
       "tslib": "1.9.3",
-      "typescript": "3.2.2"
+      "typescript": "3.2.2",
+      "webpack": "4.29.6"
    },
-   "dependencies": {}
+   "dependencies": {
+      "aws-sdk": "2.413.0",
+      "source-map-support": "0.5.9"
+   }
 }

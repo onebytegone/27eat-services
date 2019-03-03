@@ -4,23 +4,22 @@ module.exports = (grunt) => {
    let config;
 
    config = {
-      entryFile: './src/index.ts',
       js: {
          gruntFile: 'Gruntfile.js',
          all: [
             'Gruntfile.js',
-            './src/**/*.js',
-            './tests/**/*.js',
+            './services/**/src/**/*.js',
+            './services/**/tests/**/*.js',
          ],
       },
       ts: {
-         src: './src/**/*.ts',
+         src: './services/**/src/**/*.ts',
          all: [
-            './src/**/*.ts',
-            './tests/**/*.ts',
+            './services/**/src/**/*.ts',
+            './services/**/tests/**/*.ts',
          ],
          configs: {
-            standards: 'tsconfig.json',
+            standards: 'tsconfig.standards.json',
          },
       },
       commands: {
@@ -60,7 +59,7 @@ module.exports = (grunt) => {
 
       watch: {
          ts: {
-            files: [ config.ts.src ],
+            files: [ ...config.js.all, ...config.ts.all ],
             tasks: [ 'standards' ],
          },
          gruntFile: {
