@@ -1,5 +1,6 @@
+import moment from 'moment';
 import { HandlerInput, RequestHandler } from 'ask-sdk-core';
-import { Response } from 'ask-sdk-model';
+import { Response, IntentRequest } from 'ask-sdk-model';
 import { STRINGS } from '../strings';
 import MenuFormatter from '../lib/MenuFormatter';
 import MenuRetriever from '../lib/MenuRetriever';
@@ -16,7 +17,13 @@ export const getMenuIntentHandler: RequestHandler = {
    },
 
    handle(handlerInput: HandlerInput): Promise<Response> {
-      const requestedDate = ''; // TODO: get from the input
+      const request = handlerInput.requestEnvelope.request as IntentRequest,
+            intentSlots = request.intent.slots || {},
+            requestedDate = moment(intentSlots.Date.value).utc().format('YYYY-MM-DD'); // TODO: get for device timezone
+
+      if (!requestedDate) {
+         throw new Error('Received request with empty date: ' + JSON.stringify(request.intent.slots));
+      }
 
       return menuRetriever.fetchMenuForDate(requestedDate)
          .then((menu) => {
