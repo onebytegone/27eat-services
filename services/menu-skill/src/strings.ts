@@ -16,6 +16,6 @@ export const STRINGS = {
       breakfast: 'Breakfast',
       lunch: 'Lunch',
       supper: 'Supper',
-   },
+   } as { [index: string]: string },
 
 };

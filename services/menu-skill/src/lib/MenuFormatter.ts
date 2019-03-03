@@ -1,32 +1,34 @@
+import _ from 'underscore';
+import { STRINGS } from '../strings';
+
 export default class MenuFormatter {
 
-   public formatMenuForSpeech(): string {
-      return this._sanitizeStringForSpeech(''
-         + 'Breakfast<break time="200ms"/>'
-         + 'Cereal,Milk'
-         + '<break time="500ms"/>'
-         + 'Lunch<break time="200ms"/>'
-         + 'Peanut butter & jelly,Pineapple juice'
-         + '<break time="500ms"/>'
-         + 'Supper<break time="200ms"/>'
-         + 'Ramen,Soju');
+   public formatMenuForSpeech(menu: Menu): string {
+      const formattedMeals = _.map([ 'breakfast', 'lunch', 'supper' ], (meal: MealKey) => {
+         const header = STRINGS.MEAL_NAMES[meal] + '<break time="200ms"/>';
+
+         return header + _.map(menu[meal], this._sanitizeStringForSpeech.bind(this)).join(',');
+      });
+
+      return formattedMeals.join('<break time="500ms"/>');
    }
 
-   public formatMenuForSimpleCard(): string {
-      return 'Breakfast:\n'
-         + 'Cereal\n'
-         + 'Lunch:\n'
-         + 'Peanut butter & jelly\n'
-         + 'Supper:\n'
-         + 'Ramen';
+   public formatMenuForSimpleCard(menu: Menu): string {
+      const formattedMeals = _.map([ 'breakfast', 'lunch', 'supper' ], (meal: MealKey) => {
+         const header = STRINGS.MEAL_NAMES[meal] + ':\n';
+
+         return header + menu[meal].join('\n');
+      });
+
+      return formattedMeals.join('\n');
    }
 
-   public formatMealForSpeech(): string {
-      return this._sanitizeStringForSpeech('Peanut butter & jelly,Pineapple juice');
+   public formatMealForSpeech(mealItems: MealItems): string {
+      return _.map(mealItems, this._sanitizeStringForSpeech.bind(this)).join(',');
    }
 
-   public formatMealForSimpleCard(): string {
-      return 'Peanut butter & jelly\nPineapple juice';
+   public formatMealForSimpleCard(mealItems: MealItems): string {
+      return mealItems.join('\n');
    }
 
    private _sanitizeStringForSpeech(text: string): string {
