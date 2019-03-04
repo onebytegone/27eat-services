@@ -27,6 +27,7 @@
       "@types/chai": "4.1.7",
       "@types/mocha": "5.2.5",
       "@types/moment": "2.13.0",
+      "@types/moment-timezone": "0.5.10",
       "@types/node": "8.10.36",
       "@types/sinon": "5.0.5",
       "@types/underscore": "1.8.12",
@@ -55,6 +56,7 @@
       "ask-sdk-model": "1.12.0",
       "aws-sdk": "2.413.0",
       "moment": "2.24.0",
+      "moment-timezone": "0.5.23",
       "source-map-support": "0.5.9",
       "underscore": "1.9.1"
    }

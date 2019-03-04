@@ -1,4 +1,4 @@
-import { SkillBuilders } from 'ask-sdk-core';
+import { SkillBuilders, DefaultApiClient } from 'ask-sdk-core';
 import { getMealIntentHandler } from './request-handlers/GetMealIntentHandler';
 import { getMealCanFulfillHandler } from './request-handlers/GetMealCanFulfillHandler';
 import { getMenuIntentHandler } from './request-handlers/GetMenuIntentHandler';
@@ -21,5 +21,6 @@ skillBuilder.addRequestHandlers(
 );
 
 skillBuilder.addErrorHandlers(errorHandler);
+skillBuilder.withApiClient(new DefaultApiClient());
 
 export const handler = skillBuilder.lambda();

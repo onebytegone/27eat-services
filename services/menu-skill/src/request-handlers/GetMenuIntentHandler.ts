@@ -1,6 +1,6 @@
-import moment from 'moment';
+import moment from 'moment-timezone';
 import { HandlerInput, RequestHandler } from 'ask-sdk-core';
-import { Response, IntentRequest } from 'ask-sdk-model';
+import { Response, IntentRequest, services } from 'ask-sdk-model';
 import { STRINGS } from '../strings';
 import MenuFormatter from '../lib/MenuFormatter';
 import MenuRetriever from '../lib/MenuRetriever';
@@ -18,14 +18,24 @@ export const getMenuIntentHandler: RequestHandler = {
 
    handle(handlerInput: HandlerInput): Promise<Response> {
       const request = handlerInput.requestEnvelope.request as IntentRequest,
-            intentSlots = request.intent.slots || {},
-            requestedDate = moment(intentSlots.Date.value).utc().format('YYYY-MM-DD'); // TODO: get for device timezone
+            deviceId = handlerInput.requestEnvelope.context.System.device.deviceId,
+            serviceClientFactory = handlerInput.serviceClientFactory as services.ServiceClientFactory,
+            upsServiceClient = serviceClientFactory.getUpsServiceClient(),
+            intentSlots = request.intent.slots || {};
 
-      if (!requestedDate) {
-         throw new Error('Received request with empty date: ' + JSON.stringify(request.intent.slots));
+      let determineDate: Promise<moment.Moment> = Promise.resolve(moment(intentSlots.Date.value));
+
+      if (!intentSlots.Date.value) {
+         determineDate = upsServiceClient.getSystemTimeZone(deviceId)
+            .then((deviceTimezone) => {
+               return moment().utc().tz(deviceTimezone);
+            });
       }
 
-      return menuRetriever.fetchMenuForDate(requestedDate)
+      return determineDate
+         .then((requestedDate: moment.Moment) => {
+            return menuRetriever.fetchMenuForDate(requestedDate.format('YYYY-MM-DD'));
+         })
          .then((menu) => {
             return handlerInput.responseBuilder
                .speak(menuFormatter.formatMenuForSpeech(menu))
