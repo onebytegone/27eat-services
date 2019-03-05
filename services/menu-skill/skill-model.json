@@ -1,0 +1,92 @@
+{
+   "interactionModel": {
+      "languageModel": {
+         "invocationName": "twenty seven eat",
+         "intents": [
+            {
+               "name": "AMAZON.FallbackIntent",
+               "samples": []
+            },
+            {
+               "name": "AMAZON.CancelIntent",
+               "samples": []
+            },
+            {
+               "name": "AMAZON.HelpIntent",
+               "samples": []
+            },
+            {
+               "name": "AMAZON.StopIntent",
+               "samples": []
+            },
+            {
+               "name": "AMAZON.NavigateHomeIntent",
+               "samples": []
+            },
+            {
+               "name": "GetMealIntent",
+               "slots": [
+                  {
+                     "name": "Meal",
+                     "type": "Meal"
+                  },
+                  {
+                     "name": "Date",
+                     "type": "AMAZON.DATE"
+                  }
+               ],
+               "samples": [
+                  "what's for {Meal} on {Date}",
+                  "what is for {Meal} on {Date}",
+                  "what's for {Meal} {Date}",
+                  "what is for {Meal} {Date}",
+                  "what's for {Meal}",
+                  "what is for {Meal}"
+               ]
+            },
+            {
+               "name": "GetMenuIntent",
+               "slots": [
+                  {
+                     "name": "Date",
+                     "type": "AMAZON.DATE"
+                  }
+               ],
+               "samples": [
+                  "what will be served on {Date}",
+                  "what is the menu for {Date}",
+                  "what's the menu for {Date}",
+                  "what is the menu on {Date}",
+                  "what's on the menu",
+                  "what's the menu on {Date}"
+               ]
+            }
+         ],
+         "types": [
+            {
+               "name": "Meal",
+               "values": [
+                  {
+                     "name": {
+                        "value": "supper",
+                        "synonyms": [
+                           "dinner"
+                        ]
+                     }
+                  },
+                  {
+                     "name": {
+                        "value": "lunch"
+                     }
+                  },
+                  {
+                     "name": {
+                        "value": "breakfast"
+                     }
+                  }
+               ]
+            }
+         ]
+      }
+   }
+}
