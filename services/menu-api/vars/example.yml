@@ -1,0 +1,4 @@
+# The client ID and secret from the Login With Amazon security policy
+lwaClientID: ENTER_ID_HERE
+lwaClientSecret: ENTER_ID_HERE
+jwtSigningSecret: ENTER_SECRET_HERE

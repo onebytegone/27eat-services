@@ -1,0 +1,88 @@
+service: menu-api
+
+frameworkVersion: 1.32.0
+
+custom:
+   systemName: 27eat
+   defaultRegion: us-east-1
+   region: ${opt:region, self:custom.defaultRegion}
+   stage: ${opt:stage, 'dev'}
+   objectPrefix: ${self:custom.systemName}-${self:service}-${self:custom.stage}
+   stageVars: ${file(./vars/${self:custom.stage}.yml)}
+   webpack:
+      webpackConfig: ../../webpack.config.js
+      includeModules:
+         forceExclude:
+            - aws-sdk
+         forceInclude:
+            - source-map-support
+         packagePath: ../../package.json
+
+plugins:
+   - serverless-webpack
+   - serverless-iam-roles-per-function
+
+package:
+   exclude:
+      - tests/**
+
+provider:
+   name: aws
+   runtime: nodejs8.10
+   stackName: twoseveneat-${self:service}-${self:custom.stage}
+   stackTags:
+      CODE_VERSION: ${file(../../node_modules/silvermine-serverless-utils/src/get-code-version.js):both}
+      SYSTEM_NAME: ${self:custom.systemName}
+      SLS_SVC_NAME: ${self:service}
+   region: ${self:custom.region}
+   stage: ${self:custom.stage}
+   environment:
+      CODE_VERSION: ${file(../../node_modules/silvermine-serverless-utils/src/get-code-version.js):both}
+      SYSTEM_NAME: ${self:custom.systemName}
+      SLS_SVC_NAME: ${self:service}
+      SLS_STAGE: ${self:custom.stage}
+      PROFILE_TABLE_NAME: { 'Fn::ImportValue': '27eat-data-storage-${self:custom.stage}-ProfileTableName' }
+
+functions:
+   login:
+      name: ${self:custom.objectPrefix}-login
+      handler: src/LoginHandler.handler
+      memorySize: 512
+      timeout: 4
+      events:
+         - http:
+            path: /login
+            method: POST
+            cors: true
+      environment:
+         # WARNING: Do not view storing the plain-text secrets in an environment variable
+         # as a "best practice". This method has several attack vectors, e.g. exposed in
+         # git or developer's machine, exposed in AWS Console, and so on. However, it is
+         # not currently worth the overhead of encrypting this secret with KMS.
+         LWA_CLIENT_ID: ${self:custom.stageVars.lwaClientID}
+         LWA_CLIENT_SECRET: ${self:custom.stageVars.lwaClientSecret}
+         JWT_SIGNING_SECRET: ${self:custom.stageVars.jwtSigningSecret}
+      iamRoleStatements:
+         -
+            Effect: 'Allow'
+            Action:
+               - 'dynamodb:UpdateItem'
+            Resource:
+               - { 'Fn::ImportValue': '27eat-data-storage-${self:custom.stage}-ProfileTableArn' }
+   menu:
+      name: ${self:custom.objectPrefix}-menu
+      handler: src/MenuHandler.handler
+      memorySize: 512
+      timeout: 4
+      events:
+         - http:
+            path: /menu/{proxy+}
+            method: any
+            authorizer:
+               name: authorizer
+            cors: true
+   authorizer:
+      name: ${self:custom.objectPrefix}-authorizer
+      handler: src/AuthorizerHandler.handler
+      memorySize: 128
+      timeout: 1

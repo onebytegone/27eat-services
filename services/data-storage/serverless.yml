@@ -1,0 +1,84 @@
+service: data-storage
+
+frameworkVersion: 1.32.0
+
+custom:
+   systemName: 27eat
+   defaultRegion: us-east-1
+   region: ${opt:region, self:custom.defaultRegion}
+   stage: ${opt:stage, 'dev'}
+   objectPrefix: ${self:custom.systemName}-${self:service}-${self:custom.stage}
+
+package:
+   exclude:
+      - tests/**
+
+provider:
+   name: aws
+   stackName: twoseveneat-${self:service}-${self:custom.stage}
+   stackTags:
+      CODE_VERSION: ${file(../../node_modules/silvermine-serverless-utils/src/get-code-version.js):both}
+      SYSTEM_NAME: ${self:custom.systemName}
+      SLS_SVC_NAME: ${self:service}
+   region: ${self:custom.region}
+   stage: ${self:custom.stage}
+
+resources:
+   Outputs:
+      MenuTableName:
+         Description: Name of the DynamoDB table that stores menu data.
+         Value: { 'Ref': 'MenuTable' }
+         Export:
+            Name: '${self:custom.objectPrefix}-MenuTableName'
+      MenuTableArn:
+         Description: ARN of the DynamoDB table that stores feed data.
+         Value: { 'Fn::GetAtt': [ 'MenuTable', 'Arn' ] }
+         Export:
+            Name: '${self:custom.objectPrefix}-MenuTableArn'
+      ProfileTableName:
+         Description: Name of the DynamoDB table that stores profile data.
+         Value: { 'Ref': 'ProfileTable' }
+         Export:
+            Name: '${self:custom.objectPrefix}-ProfileTableName'
+      ProfileTableArn:
+         Description: ARN of the DynamoDB table that stores profile data.
+         Value: { 'Fn::GetAtt': [ 'ProfileTable', 'Arn' ] }
+         Export:
+            Name: '${self:custom.objectPrefix}-ProfileTableArn'
+   Resources:
+      MenuTable:
+         Type: 'AWS::DynamoDB::Table'
+         Properties:
+            TableName: '${self:custom.objectPrefix}-menus'
+            AttributeDefinitions:
+               -
+                  AttributeName: menuID
+                  AttributeType: S
+               -
+                  AttributeName: date
+                  AttributeType: S
+            KeySchema:
+               -
+                  AttributeName: menuID
+                  KeyType: HASH
+               -
+                  AttributeName: date
+                  KeyType: RANGE
+            ProvisionedThroughput:
+               ReadCapacityUnits: 1
+               WriteCapacityUnits: 1
+      ProfileTable:
+         Type: 'AWS::DynamoDB::Table'
+         Properties:
+            TableName: '${self:custom.objectPrefix}-profiles'
+            AttributeDefinitions:
+               -
+                  AttributeName: userID
+                  AttributeType: S
+            KeySchema:
+               -
+                  AttributeName: userID
+                  KeyType: HASH
+            ProvisionedThroughput:
+               ReadCapacityUnits: 1
+               WriteCapacityUnits: 1

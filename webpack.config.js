@@ -31,6 +31,7 @@ module.exports = {
 
    externals: [
       'aws-sdk',
+      '@silvermine/apigateway-utils', // Has dynamic requires
    ],
    target: 'node',
    mode: 'none',

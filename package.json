@@ -52,12 +52,21 @@
       "webpack": "4.29.6"
    },
    "dependencies": {
+      "@silvermine/apigateway-utils": "0.12.2",
+      "@silvermine/lambda-express": "0.1.0",
+      "@types/form-data": "2.2.1",
+      "@types/got": "9.4.1",
+      "@types/uuid": "3.4.4",
       "ask-sdk-core": "2.4.0",
       "ask-sdk-model": "1.12.0",
       "aws-sdk": "2.413.0",
+      "got": "9.6.0",
+      "jwt-simple": "0.5.5",
       "moment": "2.24.0",
       "moment-timezone": "0.5.23",
+      "q": "1.5.1",
       "source-map-support": "0.5.9",
-      "underscore": "1.9.1"
+      "underscore": "1.9.1",
+      "uuid": "3.3.2"
    }
 }
