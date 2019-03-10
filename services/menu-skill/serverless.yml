@@ -29,6 +29,7 @@ package:
 provider:
    name: aws
    runtime: nodejs8.10
+   stackName: twoseveneat-${self:service}-${self:custom.stage}
    stackTags:
       CODE_VERSION: ${file(../../node_modules/silvermine-serverless-utils/src/get-code-version.js):both}
       SYSTEM_NAME: ${self:custom.systemName}
