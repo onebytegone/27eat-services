@@ -56,7 +56,7 @@
       "ask-sdk-model": "1.12.0",
       "aws-sdk": "2.413.0",
       "moment": "2.24.0",
-      "moment-timezone": "0.5.23",
+      "moment-timezone": "0.5.35",
       "source-map-support": "0.5.9",
       "underscore": "1.9.1"
    }
